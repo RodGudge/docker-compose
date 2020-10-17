@@ -72,7 +72,7 @@ services:
     container_name: "jackett"
     volumes:
       - $DOCKERDIR/jackett:/config
-      - /media/hdd1/unprocessed/complete:/downloads
+      - $DOWNLOADS_COMPLETE:/downloads
       - "/etc/localtime:/etc/localtime:ro"
       - $DOCKERDIR/shared:/shared
     restart: unless-stopped
@@ -129,3 +129,22 @@ services:
     restart: unless-stopped
     network_mode: "service:transmission-vpn"
 
+####################
+## LIDARR - MUSIC ##
+####################
+
+  lidarr:
+    image: linuxserver/lidarr
+    container_name: lidarr
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+    volumes:
+      - $DOCKERDIR/lidarr/config:/config
+      - $MUSIC:/music
+      - $DOWNLOADS_COMPLETE:/data/completed
+      - "/etc/localtime:/etc/localtime:ro"
+      - $DOCKERDIR/shared:/shared
+    restart: unless-stopped
+    network_mode: "service:transmission-vpn"
