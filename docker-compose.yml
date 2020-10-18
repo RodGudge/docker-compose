@@ -172,3 +172,28 @@ services:
     environment:
       - PUID=$PUID
       - PGID=$PGID
+
+#######################
+#######################
+### SYSTEM SERVICES ###
+#######################
+#######################
+
+##################################
+## SAMBA - WINDOWS FILE SHARING ##
+##################################
+
+  samba:
+    image: jenserat/samba-publicshare
+    tty: true
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+    ports:
+      - 445:445
+      - 137:137
+      - 138:138
+      - 139:139
+    restart: unless-stopped
+    volumes:
+      - /media:/srv
