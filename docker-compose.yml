@@ -1,5 +1,6 @@
 version: "3.7"
 
+
 ##################################################################################
 ##     MUCH OF THIS FILE WAS COPIED/MODIFIED FROM WWW.SMARTHOMEBEGINNER.COM     ##
 ##################################################################################
@@ -50,7 +51,7 @@ services:
   # touch $DOCKERDIR/traefik2/acme/acme.json
   # chmod 600 $DOCKERDIR/traefik2/acme/acme.json
   # touch $DOCKERDIR/traefik2/traefik.log
-  
+
   traefik:
     container_name: traefik
     image: traefik:2.2.1 # the chevrotin tag refers to v2.2.x but introduced a breaking change in 2.2.2
@@ -61,7 +62,8 @@ services:
       - --entryPoints.http.address=:80
       - --entryPoints.https.address=:443
         # Allow these IPs to set the X-Forwarded-* headers - Cloudflare IPs: https://www.cloudflare.com/ips/
-      - --entrypoints.https.forwardedHeaders.trustedIPs=173.245.48.0/20,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,141.101.64.0/18,108.162.192.0/18,190.93.240.0/20,188.114.96.0/20,197.234.240.0/22,198.41.128.0/17,162.158.0.0/15,104.16.0.0/12,172.64.>      - --entryPoints.traefik.address=:8080
+      - --entrypoints.https.forwardedHeaders.trustedIPs=173.245.48.0/20,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,141.101.64.0/18,108.162.192.0/18,190.93.240.0/20,188.114.96.0/20,197.234.240.0/22,198.41.128.0/17,162.158.0.0/15,104.16.0.0/12,172.64.0.0/13,131.0.72.0/22
+      - --entryPoints.traefik.address=:8080
       - --api=true
 #      - --api.insecure=true
 #      - --serversTransport.insecureSkipVerify=true
@@ -134,7 +136,8 @@ services:
       - "traefik.http.routers.traefik-rtr.service=api@internal"
       ## Middlewares
       - "traefik.http.routers.traefik-rtr.middlewares=chain-oauth@file"
-      
+
+
 ################
 ################
 ## FRONT ENDS ##
@@ -350,12 +353,13 @@ services:
       # Since cf-companion creates CNAMEs based on host rules, this a workaround for non-docker/external apps
 #      - "traefik.http.routers.cf-companion-rtr.rule=HostHeader(`pihole.$DOMAINNAME`) || HostHeader(`hassio.$DOMAINNAME`)"
 
+
 #######################
 #######################
 ##### DOWNLOADERS #####
 #######################
 #######################
-    
+
 ######################
 ## TRANSMISSION-VPN ##
 ######################
@@ -404,6 +408,7 @@ services:
       - TRANSMISSION_PEER_PORT=$TRANSMISSION_PEER_PORT
       - TRANSMISSION_IDLE_SEEDING_LIMIT=1
       - TRANSMISSION_IDLE_SEEDING_LIMIT_ENABLED=true
+
 
 ###############################
 ## JACKETT - TORRENT INDEXER ##
@@ -483,8 +488,8 @@ services:
       - $DOCKERDIR/shared:/shared
     restart: unless-stopped
     network_mode: "service:transmission-vpn"
-    
-    
+
+
 #######################
 #######################
 ### SYSTEM SERVICES ###
@@ -492,7 +497,7 @@ services:
 #######################
 
 ##################################
-## SAMBA - WINDOWS FILE SHARING ##
+## SAMBA - Windows File Sharing ##
 ##################################
 
   samba:
