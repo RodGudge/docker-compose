@@ -152,10 +152,10 @@ services:
     container_name: airsonic
     image: linuxserver/airsonic:latest
     restart: unless-stopped
+    networks:
+      - t2_proxy
     security_opt:
       - no-new-privileges:true
-    ports:
-      - "$AIRSONIC_PORT:4040"
     volumes:
       - $MUSIC:/music
       - $PODCASTS:/podcasts
@@ -167,6 +167,21 @@ services:
     environment:
       - PUID=$PUID
       - PGID=$PGID
+      - JAVA_OPTS=-Dserver.use-forward-headers=true
+    labels:
+      - "traefik.enable=true"
+      ## HTTP Routers
+      - "traefik.http.routers.airsonic-rtr.entrypoints=https"
+      - "traefik.http.routers.airsonic-rtr.rule=Host(`airsonic.$DOMAINNAME`)"
+      - "traefik.http.routers.airsonic-rtr.tls=true"
+      ## Middlewares
+      - "traefik.http.routers.airsonic-rtr.middlewares=chain-no-auth@file"
+      ## HTTP Services
+      - "traefik.http.routers.airsonic-rtr.service=airsonic-svc"
+      - "traefik.http.services.airsonic-svc.loadbalancer.server.port=4040"
+      - "traefik.frontend.headers.frameDeny=false2"
+      - "traefik.frontend.headers.customFrameOptionsValue=SAMEORIGIN"
+      - "traefik.backend.loadbalancer.stickiness=true"
 
 ######################################
 ## PORTAINER - WEBUI FOR CONTAINERS ##
