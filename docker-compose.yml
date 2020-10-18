@@ -148,3 +148,27 @@ services:
       - $DOCKERDIR/shared:/shared
     restart: unless-stopped
     network_mode: "service:transmission-vpn"
+    
+###############################
+## AIRSONIC - MUSIC STREAMER ##
+###############################
+
+  airsonic:
+    container_name: airsonic
+    image: linuxserver/airsonic:latest
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "$AIRSONIC_PORT:4040"
+    volumes:
+      - $MUSIC:/music
+      - $PODCASTS:/podcasts
+      - $PLAYLISTS:/playlists
+      - $AUDIO_BOOKS:/audio_books
+      - $DOCKERDIR/airsonic/config:/config
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
